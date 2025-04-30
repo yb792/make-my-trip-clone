@@ -1,3 +1,4 @@
+// src/pages/Flights.js
 import { useState } from 'react';
 import axios from 'axios';
 import { Form, Button, Alert } from 'react-bootstrap';
@@ -13,26 +14,21 @@ const Flights = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // ✅ Local map of city => airport code
+  const API_BASE = process.env.REACT_APP_API_BASE_URL;
+
   const airportCodes = {
-    Delhi: 'DEL',
-    Mumbai: 'BOM',
-    Bangalore: 'BLR',
-    Hyderabad: 'HYD',
-    Kolkata: 'CCU',
-    Chennai: 'MAA',
-    Goa: 'GOI',
-    Jaipur: 'JAI',
-    Lucknow: 'LKO',
+    Delhi: 'DEL', Mumbai: 'BOM', Bangalore: 'BLR', Hyderabad: 'HYD',
+    Kolkata: 'CCU', Chennai: 'MAA', Goa: 'GOI', Jaipur: 'JAI', Lucknow: 'LKO'
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setFlights([]);
 
     try {
-      const res = await axios.get('/api/flights/search', {
+      const res = await axios.get(`${API_BASE}/api/flights/search`, {
         params: { source: from, destination: to, departureDate: date, minPrice, maxPrice },
       });
 
@@ -48,10 +44,9 @@ const Flights = () => {
     }
   };
 
-  // ✅ Flight booking handler
   const handleBook = async (flight) => {
     try {
-      const res = await axios.post('/api/bookings/flight', {
+      await axios.post(`${API_BASE}/api/bookings/flight`, {
         flight: flight._id,
         seats: 1,
         totalPrice: flight.price,
@@ -61,10 +56,10 @@ const Flights = () => {
         },
       });
 
-      alert('Flight booked successfully!');
+      alert('✅ Flight booked successfully!');
     } catch (err) {
       console.error('Booking failed:', err);
-      alert('Booking failed. Please login or try again.');
+      alert('❌ Booking failed. Please login or try again.');
     }
   };
 
@@ -73,44 +68,19 @@ const Flights = () => {
       <h2 className="text-primary mb-4"><i className="bi bi-airplane-engines"></i> Search Flights</h2>
       <Form onSubmit={handleSubmit} className="row g-3">
         <div className="col-md-6">
-          <Form.Control
-            placeholder="From (e.g., Delhi)"
-            value={from}
-            onChange={(e) => setFrom(e.target.value)}
-            required
-          />
+          <Form.Control placeholder="From (e.g., Delhi)" value={from} onChange={(e) => setFrom(e.target.value)} required />
         </div>
         <div className="col-md-6">
-          <Form.Control
-            placeholder="To (e.g., Mumbai)"
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
-            required
-          />
+          <Form.Control placeholder="To (e.g., Mumbai)" value={to} onChange={(e) => setTo(e.target.value)} required />
         </div>
         <div className="col-md-4">
-          <Form.Control
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
+          <Form.Control type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
         </div>
         <div className="col-md-4">
-          <Form.Control
-            placeholder="Min Price"
-            type="number"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-          />
+          <Form.Control placeholder="Min Price" type="number" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} />
         </div>
         <div className="col-md-4">
-          <Form.Control
-            placeholder="Max Price"
-            type="number"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-          />
+          <Form.Control placeholder="Max Price" type="number" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
         </div>
         <div className="col-12 d-grid">
           <Button type="submit" variant="primary">🔍 Search Flights</Button>
@@ -121,26 +91,20 @@ const Flights = () => {
       {success && <Alert variant="success" className="mt-3">{success}</Alert>}
 
       <div className="mt-4">
-        {flights.length > 0 ? (
-          flights.map((flight) => (
-            <div key={flight._id} className="card shadow-sm mb-3">
-              <div className="card-body">
-                <h5 className="card-title text-info">
-                  ✈️ {flight.airline} — {flight.from} ({airportCodes[flight.from] || 'N/A'}) ➡ {flight.to} ({airportCodes[flight.to] || 'N/A'})
-                </h5>
-                <p className="card-text">
-                  🕓 Departure: {new Date(flight.departureDate).toDateString()} <br />
-                  💸 Price: ₹{flight.price}
-                </p>
-                <Button variant="success" onClick={() => handleBook(flight)}>
-                  Book Now
-                </Button>
-              </div>
+        {flights.map((flight) => (
+          <div key={flight._id} className="card shadow-sm mb-3">
+            <div className="card-body">
+              <h5 className="card-title text-info">
+                ✈️ {flight.airline} — {flight.from} ({airportCodes[flight.from] || 'N/A'}) ➡ {flight.to} ({airportCodes[flight.to] || 'N/A'})
+              </h5>
+              <p className="card-text">
+                🕓 Departure: {new Date(flight.departureDate).toDateString()} <br />
+                💸 Price: ₹{flight.price}
+              </p>
+              <Button variant="success" onClick={() => handleBook(flight)}>Book Now</Button>
             </div>
-          ))
-        ) : (
-          <p className="text-muted">No flights found for the selected filters.</p>
-        )}
+          </div>
+        ))}
       </div>
     </div>
   );

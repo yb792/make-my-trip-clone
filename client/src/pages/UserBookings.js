@@ -18,11 +18,12 @@ const cityMap = {
 const UserBookings = () => {
   const [bookings, setBookings] = useState([]);
   const token = localStorage.getItem('token');
+  const API_BASE = process.env.REACT_APP_API_BASE_URL; // Reference to the environment variable
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const res = await axios.get('/api/bookings/my', {
+        const res = await axios.get(`${API_BASE}/api/bookings/my`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setBookings(res.data);
@@ -32,13 +33,13 @@ const UserBookings = () => {
     };
 
     fetchBookings();
-  }, []);
+  }, [API_BASE, token]); // Ensure the effect reruns if `apiBaseUrl` or `token` changes
 
   const cancelBooking = async (id) => {
     if (!window.confirm('Are you sure you want to cancel this booking?')) return;
 
     try {
-      await axios.delete(`/api/bookings/${id}`, {
+      await axios.delete(`${apiBaseUrl}/api/bookings/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBookings(bookings.filter((b) => b._id !== id));

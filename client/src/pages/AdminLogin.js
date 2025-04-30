@@ -1,3 +1,4 @@
+// src/pages/AdminLogin.js
 import { useState } from 'react';
 import axios from 'axios';
 
@@ -5,9 +6,11 @@ const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
   const handleLogin = async () => {
     try {
-      const res = await axios.post('/api/admin/login', { email, password });
+      const res = await axios.post(`${apiBaseUrl}/api/admin/login`, { email, password });
       localStorage.setItem('adminToken', res.data.token);
       window.location.href = '/admin/dashboard';
     } catch (err) {

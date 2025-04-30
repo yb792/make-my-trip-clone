@@ -1,3 +1,4 @@
+// src/pages/Register.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -5,6 +6,7 @@ const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const API_BASE = process.env.REACT_APP_API_BASE_URL; // Using API_BASE from .env
 
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -13,7 +15,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/auth/register', formData);
+      await axios.post(`${API_BASE}/api/auth/register`, formData); // Using API_BASE for the request
       setSuccess('Registered successfully! Now login.');
       setError('');
     } catch (err) {

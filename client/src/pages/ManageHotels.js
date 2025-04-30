@@ -20,195 +20,178 @@ const ManageHotels = () => {
 
   const fetchHotels = async () => {
     const token = localStorage.getItem('adminToken');
-    const res = await axios.get('/api/admin/hotels', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+    const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/admin/hotels`, {
+      headers: { Authorization: `Bearer ${token}` }
     });
     setHotels(res.data);
   };
 
-  const handleShow = (hotel = null) => {
-    setCurrentHotel(hotel);
-    setFormData(
-      hotel
-        ? {
-            name: hotel.name || '',
-            location: hotel.location || '',
-            price: hotel.price?.toString() || '',
-            rating: hotel.rating?.toString() || '',
-            amenities: Array.isArray(hotel.amenities)
-              ? hotel.amenities.join(', ')
-              : ''
-          }
-        : {
-            name: '',
-            location: '',
-            price: '',
-            rating: '',
-            amenities: ''
-          }
-    );
-    setShowModal(true);
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setFormData({ name: '', location: '', price: '', rating: '', amenities: '' });
+    setCurrentHotel(null);
   };
 
-  const handleClose = () => {
-    setShowModal(false);
-    setCurrentHotel(null);
+  const handleShowModal = (hotel = null) => {
+    if (hotel) {
+      setFormData(hotel);
+      setCurrentHotel(hotel._id);
+    }
+    setShowModal(true);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSave = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const data = {
-        ...formData,
-        price: parseInt(formData.price),
-        rating: parseFloat(formData.rating),
-        amenities: formData.amenities
-          .split(',')
-          .map((a) => a.trim())
-          .filter(Boolean)
-      };
-
-      if (currentHotel) {
-        await axios.put(`/api/admin/hotels/${currentHotel._id}`, data, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-      } else {
-        await axios.post('/api/admin/hotels', data, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+      if (!token) {
+        alert('Admin not logged in.');
+        return;
       }
 
-      setShowModal(false);
-      fetchHotels(); // refresh updated list
+      const { name, location, price, rating, amenities } = formData;
+
+      if (currentHotel) {
+        await axios.put(
+          `${process.env.REACT_APP_API_BASE_URL}/api/admin/hotels/${currentHotel}`,
+          { name, location, price, rating, amenities },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } else {
+        await axios.post(
+          `${process.env.REACT_APP_API_BASE_URL}/api/admin/hotels`,
+          { name, location, price, rating, amenities },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
+
+      fetchHotels();
+      handleCloseModal();
     } catch (error) {
       console.error('Error saving hotel:', error);
+      alert('An error occurred while saving the hotel.');
     }
   };
 
   const handleDelete = async (hotelId) => {
-    const token = localStorage.getItem('adminToken');
+    if (!window.confirm('Are you sure you want to delete this hotel?')) return;
     try {
-      await axios.delete(`/api/admin/hotels/${hotelId}`, {
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        alert('Admin not logged in.');
+        return;
+      }
+
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/admin/hotels/${hotelId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setHotels(hotels.filter((hotel) => hotel._id !== hotelId));
+      fetchHotels();
     } catch (error) {
       console.error('Error deleting hotel:', error);
+      alert('An error occurred while deleting the hotel.');
     }
   };
 
   return (
-    <div className="container mt-4">
-      <h2>Manage Hotels</h2>
-      <Button variant="primary" onClick={() => handleShow()}>
-        Add New Hotel
+    <div>
+      <Button onClick={() => handleShowModal()} className="mb-3">
+        Add Hotel
       </Button>
-      <ul className="list-group mt-4">
-        {hotels.map((hotel) => (
-          <li
-            key={hotel._id}
-            className="list-group-item d-flex justify-content-between align-items-center"
-          >
-            <span>
-              {hotel.name} - ₹{hotel.price}
-            </span>
-            <div>
-              <Button
-                variant="warning"
-                className="me-2"
-                onClick={() => handleShow(hotel)}
-              >
-                Edit
-              </Button>
-              <Button
-                variant="danger"
-                onClick={() => handleDelete(hotel._id)}
-              >
-                Delete
-              </Button>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Price</th>
+            <th>Rating</th>
+            <th>Amenities</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {hotels.map(hotel => (
+            <tr key={hotel._id}>
+              <td>{hotel.name}</td>
+              <td>{hotel.location}</td>
+              <td>{hotel.price}</td>
+              <td>{hotel.rating}</td>
+              <td>{hotel.amenities}</td>
+              <td>
+                <Button onClick={() => handleShowModal(hotel)}>Edit</Button>
+                <Button onClick={() => handleDelete(hotel._id)} variant="danger" className="ms-2">
+                  Delete
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-      {/* Modal for adding/editing hotels */}
-      <Modal show={showModal} onHide={handleClose}>
+      <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>{currentHotel ? 'Edit Hotel' : 'Add Hotel'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formHotelName">
+          <Form>
+            <Form.Group controlId="name">
               <Form.Label>Hotel Name</Form.Label>
               <Form.Control
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                required
               />
             </Form.Group>
-
-            <Form.Group controlId="formHotelLocation">
+            <Form.Group controlId="location">
               <Form.Label>Location</Form.Label>
               <Form.Control
                 type="text"
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                required
               />
             </Form.Group>
-
-            <Form.Group controlId="formHotelPrice">
+            <Form.Group controlId="price">
               <Form.Label>Price</Form.Label>
               <Form.Control
-                type="number"
+                type="text"
                 name="price"
                 value={formData.price}
                 onChange={handleChange}
-                required
               />
             </Form.Group>
-
-            <Form.Group controlId="formHotelRating">
+            <Form.Group controlId="rating">
               <Form.Label>Rating</Form.Label>
               <Form.Control
-                type="number"
+                type="text"
                 name="rating"
                 value={formData.rating}
                 onChange={handleChange}
-                step="0.1"
-                min="0"
-                max="5"
-                required
               />
             </Form.Group>
-
-            <Form.Group controlId="formHotelAmenities">
-              <Form.Label>Amenities (comma separated)</Form.Label>
+            <Form.Group controlId="amenities">
+              <Form.Label>Amenities</Form.Label>
               <Form.Control
                 type="text"
                 name="amenities"
                 value={formData.amenities}
                 onChange={handleChange}
-                required
               />
             </Form.Group>
-
-            <Button variant="primary" type="submit" className="mt-3">
-              {currentHotel ? 'Update Hotel' : 'Add Hotel'}
-            </Button>
           </Form>
         </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleSave}>
+            {currentHotel ? 'Update' : 'Add'} Hotel
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );

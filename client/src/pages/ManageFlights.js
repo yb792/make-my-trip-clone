@@ -33,7 +33,7 @@ const ManageFlights = () => {
         return;
       }
 
-      const res = await axios.get("/api/admin/flights", {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/admin/flights`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setFlights(res.data);
@@ -101,11 +101,11 @@ const ManageFlights = () => {
       };
 
       if (editId) {
-        await axios.put(`/api/admin/flights/${editId}`, dataToSend, {
+        await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/admin/flights/${editId}`, dataToSend, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else {
-        await axios.post("/api/admin/flights", dataToSend, {
+        await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/admin/flights`, dataToSend, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
@@ -126,7 +126,7 @@ const ManageFlights = () => {
         return;
       }
 
-      await axios.delete(`/api/admin/flights/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/admin/flights/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchFlights();

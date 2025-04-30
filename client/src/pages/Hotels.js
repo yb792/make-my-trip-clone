@@ -14,18 +14,12 @@ const Hotels = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  const API_BASE = process.env.REACT_APP_API_BASE_URL;
+
   const handleSearch = async () => {
     try {
-      const { data } = await axios.get('/api/hotels/search', {
-        params: {
-          location,
-          checkinDate,
-          minPrice,
-          maxPrice,
-          rating,
-          amenities,
-          sortBy,
-        },
+      const { data } = await axios.get(`${API_BASE}/api/hotels/search`, {
+        params: { location, checkinDate, minPrice, maxPrice, rating, amenities, sortBy },
       });
       setHotels(data);
       setError('');
@@ -38,7 +32,6 @@ const Hotels = () => {
 
   const handleBook = async (hotel) => {
     const token = localStorage.getItem('token');
-
     if (!token) {
       setError('You must be logged in to book a hotel.');
       setSuccess('');
@@ -46,18 +39,14 @@ const Hotels = () => {
     }
 
     try {
-      await axios.post(
-        '/api/bookings/hotel',
-        {
-          hotel: hotel._id,
-          totalPrice: hotel.price,
+      await axios.post(`${API_BASE}/api/bookings/hotel`, {
+        hotel: hotel._id,
+        totalPrice: hotel.price,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      });
       setSuccess('✅ Hotel booked successfully!');
       setError('');
     } catch (err) {
@@ -72,86 +61,36 @@ const Hotels = () => {
 
       <div className="row g-3 mb-4">
         <div className="col-md-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="📍 Location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
+          <input type="text" className="form-control" placeholder="📍 Location" value={location} onChange={(e) => setLocation(e.target.value)} />
         </div>
-
         <div className="col-md-3">
-          <input
-            type="date"
-            className="form-control"
-            value={checkinDate}
-            onChange={(e) => setCheckinDate(e.target.value)}
-          />
+          <input type="date" className="form-control" value={checkinDate} onChange={(e) => setCheckinDate(e.target.value)} />
         </div>
-
         <div className="col-md-2">
-          <input
-            type="number"
-            className="form-control"
-            placeholder="Min ₹"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-          />
+          <input type="number" className="form-control" placeholder="Min ₹" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} />
         </div>
-
         <div className="col-md-2">
-          <input
-            type="number"
-            className="form-control"
-            placeholder="Max ₹"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-          />
+          <input type="number" className="form-control" placeholder="Max ₹" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
         </div>
-
         <div className="col-md-2">
-          <select
-            className="form-select"
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
-          >
+          <select className="form-select" value={rating} onChange={(e) => setRating(e.target.value)}>
             <option value="">Min Rating</option>
-            {[1, 2, 3, 4, 5].map((r) => (
-              <option key={r} value={r}>
-                {r} ⭐
-              </option>
-            ))}
+            {[1, 2, 3, 4, 5].map(r => <option key={r} value={r}>{r} ⭐</option>)}
           </select>
         </div>
-
         <div className="col-md-4">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="🛁 Amenities (comma separated)"
-            value={amenities}
-            onChange={(e) => setAmenities(e.target.value)}
-          />
+          <input type="text" className="form-control" placeholder="🛁 Amenities (comma separated)" value={amenities} onChange={(e) => setAmenities(e.target.value)} />
         </div>
-
         <div className="col-md-2">
-          <select
-            className="form-select"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-          >
+          <select className="form-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
             <option value="">Sort By</option>
             <option value="priceAsc">💰 Price: Low to High</option>
             <option value="priceDesc">💸 Price: High to Low</option>
             <option value="rating">🌟 Top Rated</option>
           </select>
         </div>
-
         <div className="col-md-2">
-          <button className="btn btn-primary w-100 fw-semibold" onClick={handleSearch}>
-            🔍 Search
-          </button>
+          <button className="btn btn-primary w-100 fw-semibold" onClick={handleSearch}>🔍 Search</button>
         </div>
       </div>
 
@@ -168,24 +107,11 @@ const Hotels = () => {
             <div className="card h-100 border-0 shadow-sm rounded-4">
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title text-primary fw-bold">{hotel.name}</h5>
-                <p className="mb-1">
-                  <strong>📍 Location:</strong> {hotel.location}
-                </p>
-                <p className="mb-1">
-                  <strong>⭐ Rating:</strong> {hotel.rating}
-                </p>
-                <p className="mb-1">
-                  <strong>💰 Price:</strong> ₹{hotel.price} / night
-                </p>
-                <p className="mb-3">
-                  <strong>🛎 Amenities:</strong> {hotel.amenities.join(', ')}
-                </p>
-                <button
-                  className="btn btn-success mt-auto"
-                  onClick={() => handleBook(hotel)}
-                >
-                  🛏 Book Now
-                </button>
+                <p><strong>📍 Location:</strong> {hotel.location}</p>
+                <p><strong>⭐ Rating:</strong> {hotel.rating}</p>
+                <p><strong>💰 Price:</strong> ₹{hotel.price} / night</p>
+                <p><strong>🛎 Amenities:</strong> {hotel.amenities.join(', ')}</p>
+                <button className="btn btn-success mt-auto" onClick={() => handleBook(hotel)}>🛏 Book Now</button>
               </div>
             </div>
           </div>

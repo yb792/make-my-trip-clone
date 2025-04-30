@@ -5,37 +5,52 @@ const cors = require('cors');
 
 const app = express();
 
-// ✅ CORS setup: allow requests only from your deployed Netlify frontend
+// ✅ CORS setup: allow requests from both Netlify and localhost frontend
 app.use(cors({
-  origin: 'https://precious-malasada-ca721c.netlify.app/', // 🔁 Replace this with your real Netlify URL
+  origin: [
+    'https://precious-malasada-ca721c.netlify.app',
+    'http://localhost:3000'
+  ],
   credentials: true
 }));
 
-// Middleware
+// ✅ Middleware
 app.use(express.json());
 
-// Routes
+// ✅ API Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/flights', require('./routes/flights'));
 app.use('/api/hotels', require('./routes/hotels'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/admin', require('./routes/admin'));
 
-// Default test route
+// ✅ Default test route
 app.get('/', (req, res) => {
   res.send('🛫 Welcome to MakeMyTrip Clone API');
 });
 
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('✅ MongoDB connected'))
-.catch(err => console.error('❌ MongoDB error:', err));
+// ✅ MongoDB connection and Server start
+const startServer = async () => {
+  try {
+    const MONGO_URI = process.env.MONGO_URI;
+    if (!MONGO_URI) throw new Error('❌ Missing MONGO_URI in environment variables');
 
-// Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+    await mongoose.connect(MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log('✅ MongoDB connected');
+
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('❌ MongoDB connection failed:', err.message);
+    process.exit(1); // Exit with failure
+  }
+};
+
+startServer();
+  

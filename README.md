@@ -49,7 +49,7 @@ server/              # Express backend
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB Atlas
 - **Auth**: JWT (JSON Web Tokens)
-- **Deployment**: Render / Heroku / Vercel / Railway (choose one)
+- **Deployment**: Render and Netlify
 
 ---
 

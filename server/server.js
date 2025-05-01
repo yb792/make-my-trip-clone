@@ -5,16 +5,10 @@ const cors = require('cors');
 
 const app = express();
 
-// ✅ TEMP CORS: Allow all origins (for first-time deployment)
-app.use(cors({
-  origin: '*', // Allow all origins temporarily
-  credentials: true // If you're using cookies or JWT auth
-}));
-
-// ✅ STRICT CORS: Allow only specific origins (for later deployment)
+// ✅ Strict CORS configuration (no duplicate cors() call!)
 const allowedOrigins = [
-  'https://spectacular-blini-9ce730.netlify.app/', // ✅ Your final frontend URL
-  'http://localhost:3000' // ✅ For local development
+  'https://spectacular-blini-9ce730.netlify.app', // ✅ Netlify domain (no trailing slash)
+  'http://localhost:3000',                        // ✅ Local dev
 ];
 
 app.use(cors({
@@ -22,16 +16,17 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('❌ CORS blocked request from:', origin);
       callback(new Error('❌ Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
 }));
 
 // ✅ Middleware
 app.use(express.json());
 
-// ✅ API Routes
+// ✅ Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/flights', require('./routes/flights'));
 app.use('/api/hotels', require('./routes/hotels'));
@@ -43,7 +38,7 @@ app.get('/', (req, res) => {
   res.send('🛫 Welcome to MakeMyTrip Clone API');
 });
 
-// ✅ Connect to DB and start server
+// ✅ Connect to MongoDB and start server
 const startServer = async () => {
   try {
     const MONGO_URI = process.env.MONGO_URI;

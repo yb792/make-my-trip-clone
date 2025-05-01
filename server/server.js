@@ -5,50 +5,48 @@ const cors = require('cors');
 
 const app = express();
 
-// ✅ Strict CORS configuration (no duplicate cors() call!)
+// Allow all origins for development purposes
 const allowedOrigins = [
-  'https://spectacular-blini-9ce730.netlify.app', // ✅ Netlify domain (no trailing slash)
-  'http://localhost:3000',                        // ✅ Local dev
+  'https://spectacular-blini-9ce730.netlify.app',  // Frontend URL
+  'http://localhost:3000',  // For local development
 ];
 
+// Configure CORS with credentials and specific allowed origins
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.log('❌ CORS blocked request from:', origin);
       callback(new Error('❌ Not allowed by CORS'));
     }
   },
-  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true  // Allow cookies (if needed for JWT)
 }));
 
-// ✅ Middleware
+// Middleware
 app.use(express.json());
 
-// ✅ Routes
+// Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/flights', require('./routes/flights'));
 app.use('/api/hotels', require('./routes/hotels'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/admin', require('./routes/admin'));
 
-// ✅ Default route
+// Default route
 app.get('/', (req, res) => {
   res.send('🛫 Welcome to MakeMyTrip Clone API');
 });
 
-// ✅ Connect to MongoDB and start server
+// MongoDB Connection & Server Start
 const startServer = async () => {
   try {
     const MONGO_URI = process.env.MONGO_URI;
     if (!MONGO_URI) throw new Error('❌ Missing MONGO_URI in environment variables');
 
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
+    await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
     console.log('✅ MongoDB connected');
 
     const PORT = process.env.PORT || 5000;

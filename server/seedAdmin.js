@@ -6,13 +6,13 @@ require('dotenv').config();
 const seedAdmin = async () => {
   await mongoose.connect(process.env.MONGO_URI);
 
-  const existing = await Admin.findOne({ email: 'admin@example.com' });
+  const existing = await Admin.findOne({ email: 'yashu09@gmail.com' });
   if (existing) return console.log('Admin already exists');
 
-  const hashedPassword = await bcrypt.hash('admin123', 10);
+  const hashedPassword = await bcrypt.hash('Yashu@09', 10);
 
   const admin = new Admin({
-    email: 'admin@example.com',
+    email: 'yashu09@gmail.com',
     password: hashedPassword
   });
 

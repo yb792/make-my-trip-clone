@@ -5,13 +5,10 @@ const cors = require('cors');
 
 const app = express();
 
-// ✅ CORS setup: allow requests from both Netlify and localhost frontend
+// ✅ TEMP CORS: Allow all origins (for first-time deployment)
 app.use(cors({
-  origin: [
-    'https://precious-malasada-ca721c.netlify.app',
-    'http://localhost:3000'
-  ],
-  credentials: true
+  origin: '*', // Allow all origins temporarily
+  credentials: true // If you're using cookies or JWT auth
 }));
 
 // ✅ Middleware
@@ -24,12 +21,12 @@ app.use('/api/hotels', require('./routes/hotels'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/admin', require('./routes/admin'));
 
-// ✅ Default test route
+// ✅ Default route
 app.get('/', (req, res) => {
   res.send('🛫 Welcome to MakeMyTrip Clone API');
 });
 
-// ✅ MongoDB connection and Server start
+// ✅ Connect to DB and start server
 const startServer = async () => {
   try {
     const MONGO_URI = process.env.MONGO_URI;
@@ -48,9 +45,8 @@ const startServer = async () => {
     });
   } catch (err) {
     console.error('❌ MongoDB connection failed:', err.message);
-    process.exit(1); // Exit with failure
+    process.exit(1);
   }
 };
 
 startServer();
-  

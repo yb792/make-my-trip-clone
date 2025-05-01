@@ -11,6 +11,23 @@ app.use(cors({
   credentials: true // If you're using cookies or JWT auth
 }));
 
+// ✅ STRICT CORS: Allow only specific origins (for later deployment)
+const allowedOrigins = [
+  'https://precious-malasada-ca721c.netlify.app', // ✅ Your final frontend URL
+  'http://localhost:3000' // ✅ For local development
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('❌ Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 // ✅ Middleware
 app.use(express.json());
 

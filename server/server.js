@@ -13,7 +13,7 @@ app.use(cors({
 
 // ✅ STRICT CORS: Allow only specific origins (for later deployment)
 const allowedOrigins = [
-  'https://precious-malasada-ca721c.netlify.app', // ✅ Your final frontend URL
+  'https://spectacular-blini-9ce730.netlify.app/', // ✅ Your final frontend URL
   'http://localhost:3000' // ✅ For local development
 ];
 

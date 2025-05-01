@@ -87,8 +87,8 @@ npm install
 ### For Backend (`/server/.env`)
 ```env
 PORT=5000
-MONGODB_URI=your_mongodb_atlas_uri
-JWT_SECRET=your_jwt_secret
+MONGODB_URI=mongodb+srv://yashu09:Yashu%4009@cluster0.lfs7axk.mongodb.net/mmtCloneDB?retryWrites=true&w=majority
+JWT_SECRET=e57014cf946eaaf80150efb2833bfe5982f03c7cc825b0abbc5fc1120e978ca1e1b77d101e30045c74d190f6187b043915fb7c9eed74051c203ccff8a58d86061f59c8d5b079a3688c6d7d91a17a5589f7b33cd282e66804d1cc5c7879b022c9c0f0fa80d95096b20bfb40bd6d8d088511dd4d75ee42101baa102e9e914c0c0d3cd278c50b01d4fbe4487da43e2a0f7e9245ff8122c924e98c4d4c0d0f8b364919627cd0f48bd20b4c09fe4856a16e0e387df75b4fe056623e2f8b1a2c171c626a78cffff64152aa79d918d8113539597a100ac435e285f802098f1828d34ccecce13f33a60d988c164c2cc9c20a117f5ea9a202be606166ba04a040d73c5e55
 ```
 
 ---
@@ -98,7 +98,7 @@ JWT_SECRET=your_jwt_secret
 ### Start Backend
 ```bash
 cd server
-npm run dev
+npm start
 ```
 
 ### Start Frontend
@@ -107,35 +107,35 @@ cd client
 npm start
 ```
 
-Frontend runs on `http://localhost:3000`  
+Frontend runs on `http://localhost:3000` 
 Backend runs on `http://localhost:5000`
 
 ---
 
 ## 🛫 Deployment Instructions
 
-You can deploy using **Render**, **Vercel**, or **Railway**.
-
+You can deploy using **Render**and **Netlify**
 ### 🧑‍💻 Backend on Render:
 1. Push your code to GitHub.
 2. Create a new Web Service on Render.
 3. Link the GitHub repo.
 4. Set build command: `npm install`  
-   Set start command: `node server.js` or `npm run dev`
+   Set start command: `npm start`
 5. Add environment variables in Render dashboard.
+   
 
-### 🌐 Frontend on Vercel:
-1. Install Vercel CLI:
-```bash
-npm install -g vercel
-```
-2. Deploy:
-```bash
-cd client
-vercel
-```
+### 🌐 Frontend on Netlify:
+1. Push your code to GitHub.
+2. Click "Add new site" → Import from GitHub
+3. Link the GitHub repo.
+4. Set build command: `npm run build`  
+   Set start command: `npm start
+   Set publish directory: client/build
+5. Add environment variables in Netlify dashboard
 
----
+**Deployed Links:** 
+**Frontend**: https://spectacular-blini-9ce730.netlify.app/
+**Backend**: https://make-my-trip-clone-1-5wtu.onrender.com
 
 ## 📘 Usage Instructions
 
@@ -176,8 +176,8 @@ vercel
 
 To seed flights/hotels:
 ```bash
-node utils/seedFlights.js
-node utils/seedHotels.js
+seedFlights.js
+seedHotels.js
 ```
 
 Make sure the scripts connect to your MongoDB URI.

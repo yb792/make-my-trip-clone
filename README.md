@@ -76,7 +76,7 @@ server/              # Express backend
 
 #### 1. Clone the repository
 ```bash
-git clone https://github.com/yashubaghel/makemytrip-clone.git
+git clone https://github.com/yb792/make-my-trip-clone.git
 cd makemytrip-clone
 ```
 

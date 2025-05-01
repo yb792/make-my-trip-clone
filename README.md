@@ -25,20 +25,32 @@ A full-stack travel booking web app inspired by MakeMyTrip, built using **MongoD
 ## 📁 Project Structure
 
 ```
-client/              # React frontend
+client/ # React frontend
+└── build 
 │
 └── src/
-    ├── pages/       # Home, Flights, Hotels, Login, Register, etc.
-    ├── components/  # Navbar, ProtectedRoutes
-    └── App.js       # Routing and layout
-    
+    ├── pages/                 #  AdminDashboard, AdminLogin, Home, Flights, Hotels, Login, ManageFlights, ManageHotels, Register
+    ├── components/            # BookingButton.js, FlightCard.js, FlightSearchResults.js, HotelCard.js, Navbar.js, PrivateAdminRoutes.js
+    └── App.js                 # Routing and layout
+    └── index.js               # Scripting file
+    └── App.cs                 # Styling file
+    └── .env                   # environment variables containing backend url
+    └── package-lock.json      # dependency files
+    └── package.json  
 
 server/              # Express backend
 │
-├── models/          # Mongoose models (User, Flight, Hotel, Booking)
-├── routes/          # All route files (auth, flights, hotels, admin)
-├── middleware/      # Auth middlewares           
-└── server.js        # App entry point
+├── models/                # Mongoose models (User, Flight, Hotel, Booking)
+├── routes/                # All route files (auth, flights, hotels, admin)
+├── middleware/            # Auth middlewares           
+└── server.js              # App entry point
+└── .env                   # environment variables containing Mongo_URI, JWT_Secret_Key and PORT
+└── seedAdmin.js           # for seeding admin
+└── seedFlights.js         # for seeding Flights
+└── seedHotels.js          # for seeding Hotels
+└── package-lock.json      # dependency files
+└── package.json  
+
 ```
 
 ---
@@ -134,8 +146,14 @@ You can deploy using **Render**and **Netlify**
 5. Add environment variables in Netlify dashboard
 
 **Deployed Links:** 
-**Frontend**: https://spectacular-blini-9ce730.netlify.app/
+**Frontend**: https://spectacular-blini-9ce730.netlify.app
 **Backend**: https://make-my-trip-clone-1-5wtu.onrender.com
+
+**User credentials**
+**User Login**: email: yashubaghel2019@gmail.com
+                password: Yashu@123
+**Admin Login**: email: yashu09@gmail.com
+                 password: Yashu@09
 
 ## 📘 Usage Instructions
 

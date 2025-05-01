@@ -1,5 +1,6 @@
-# Ignore IDE-specific files
+# Ignore IDE-specific files and node modules
 .vscode/
+node_modules/
 
 
 

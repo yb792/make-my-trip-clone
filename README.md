@@ -152,6 +152,8 @@ You can deploy using **Render**and **Netlify**
 **User credentials**
 **User Login**: email: yashubaghel2019@gmail.com
                 password: Yashu@123
+                Search flights from Delhi to Mumbai for 16/05/2025
+                Seach hotels in Delhi, Mumbai and Goa for 16/05/2025
 **Admin Login**: email: yashu09@gmail.com
                  password: Yashu@09
 

@@ -88,7 +88,7 @@ npm install
 
 #### 3. Install client dependencies
 ```bash
-cd ../client
+cd client
 npm install
 ```
 
@@ -181,7 +181,7 @@ You can deploy using **Render**and **Netlify**
 
 ---
 
-## 💄 UI/UX Enhancements
+## 🖌️I/UX Enhancements
 
 - Responsive design using Bootstrap
 - Flight & Hotel Cards layout

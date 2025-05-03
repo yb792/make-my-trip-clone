@@ -39,7 +39,7 @@ const UserBookings = () => {
     if (!window.confirm('Are you sure you want to cancel this booking?')) return;
 
     try {
-      await axios.delete(`${apiBaseUrl}/api/bookings/${id}`, {
+      await axios.delete(`${API_BASE}/api/bookings/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBookings(bookings.filter((b) => b._id !== id));

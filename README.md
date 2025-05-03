@@ -25,20 +25,32 @@ A full-stack travel booking web app inspired by MakeMyTrip, built using **MongoD
 ## 📁 Project Structure
 
 ```
-client/              # React frontend
+client/ # React frontend
+└── build 
 │
 └── src/
-    ├── pages/       # Home, Flights, Hotels, Login, Register, etc.
-    ├── components/  # Navbar, ProtectedRoutes
-    └── App.js       # Routing and layout
-    
+    ├── pages/                 #  AdminDashboard, AdminLogin, Home, Flights, Hotels, Login, ManageFlights, ManageHotels, Register
+    ├── components/            # BookingButton.js, FlightCard.js, FlightSearchResults.js, HotelCard.js, Navbar.js, PrivateAdminRoutes.js
+    └── App.js                 # Routing and layout
+    └── index.js               # Scripting file
+    └── App.cs                 # Styling file
+    └── .env                   # environment variables containing backend url
+    └── package-lock.json      # dependency files
+    └── package.json  
 
 server/              # Express backend
 │
-├── models/          # Mongoose models (User, Flight, Hotel, Booking)
-├── routes/          # All route files (auth, flights, hotels, admin)
-├── middleware/      # Auth middlewares           
-└── server.js        # App entry point
+├── models/                # Mongoose models (User, Flight, Hotel, Booking)
+├── routes/                # All route files (auth, flights, hotels, admin)
+├── middleware/            # Auth middlewares           
+└── server.js              # App entry point
+└── .env                   # environment variables containing Mongo_URI, JWT_Secret_Key and PORT
+└── seedAdmin.js           # for seeding admin
+└── seedFlights.js         # for seeding Flights
+└── seedHotels.js          # for seeding Hotels
+└── package-lock.json      # dependency files
+└── package.json  
+
 ```
 
 ---
@@ -49,7 +61,7 @@ server/              # Express backend
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB Atlas
 - **Auth**: JWT (JSON Web Tokens)
-- **Deployment**: Render / Heroku / Vercel / Railway (choose one)
+- **Deployment**: Render and Netlify
 
 ---
 
@@ -64,7 +76,7 @@ server/              # Express backend
 
 #### 1. Clone the repository
 ```bash
-git clone https://github.com/yashubaghel/makemytrip-clone.git
+git clone https://github.com/yb792/make-my-trip-clone.git
 cd makemytrip-clone
 ```
 
@@ -76,7 +88,7 @@ npm install
 
 #### 3. Install client dependencies
 ```bash
-cd ../client
+cd client
 npm install
 ```
 
@@ -134,8 +146,16 @@ You can deploy using **Render**and **Netlify**
 5. Add environment variables in Netlify dashboard
 
 **Deployed Links:** 
-**Frontend**: https://spectacular-blini-9ce730.netlify.app/
+**Frontend**: https://spectacular-blini-9ce730.netlify.app
 **Backend**: https://make-my-trip-clone-1-5wtu.onrender.com
+
+**User credentials**
+**User Login**: email: yashubaghel2019@gmail.com
+                password: Yashu@123
+                Search flights from Delhi to Mumbai for 16/05/2025
+                Seach hotels in Delhi, Mumbai and Goa for 16/05/2025
+**Admin Login**: email: yashu09@gmail.com
+                 password: Yashu@09
 
 ## 📘 Usage Instructions
 
@@ -163,7 +183,7 @@ You can deploy using **Render**and **Netlify**
 
 ---
 
-## 💄 UI/UX Enhancements
+## 🖌️I/UX Enhancements
 
 - Responsive design using Bootstrap
 - Flight & Hotel Cards layout

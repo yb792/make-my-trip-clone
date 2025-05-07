@@ -206,7 +206,7 @@ Make sure the scripts connect to your MongoDB URI.
 
 ## 😇 Support
 
-For any issues, reach out to `yashubaghel2019@gmail.com` or raise an issue on the GitHub repo.
+For any issues, reach out to `yashubaghel2019@gmail.com` or raise an issue on the GitHub repo. 
 
 ---
 

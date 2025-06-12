@@ -1,28 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, Form, Button, Spinner } from 'react-bootstrap';
+import { Card, Spinner, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const Hotels = () => {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [location, setLocation] = useState('');
-  const [checkinDate, setCheckinDate] = useState('');
+  const [checkInDate, setCheckInDate] = useState('');
+  const [rating, setRating] = useState('');
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(10000);
-  const [rating, setRating] = useState('');
-  const [amenities, setAmenities] = useState('');
   const [sortBy, setSortBy] = useState('');
   const navigate = useNavigate();
 
   const fetchHotels = async () => {
     try {
       setLoading(true);
-      const params = { location, checkinDate, minPrice, maxPrice, rating, amenities, sortBy };
-      const { data } = await axios.get('/api/hotels/search', { params });
-      setHotels(data);
-    } catch (err) {
-      console.error('❌ Error fetching hotels:', err);
+      const params = { location, checkInDate, rating, minPrice, maxPrice, sortBy };
+      const { data } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/hotels/search`, { params });
+      console.log("Fetched hotel data:", data);
+      setHotels(Array.isArray(data) ? data : data.hotels || []);
+    } catch (error) {
+      console.error('Error fetching hotels:', error);
+      setHotels([]);
     } finally {
       setLoading(false);
     }
@@ -43,16 +44,17 @@ const Hotels = () => {
       hotel: hotel._id,
       totalPrice: hotel.price,
       price: hotel.price,
+      checkInDate: checkInDate,
     };
     navigate('/payment', { state: { bookingDetails } });
   };
 
   return (
     <div className="container my-4">
-      <h2 className="text-success mb-4">🏨 Search Hotels</h2>
+      <h2 className="text-primary mb-4">🏨 Search Hotels</h2>
 
       <Form onSubmit={handleFilterSubmit} className="row g-3 mb-4">
-        <div className="col-md-3">
+        <div className="col-md-2">
           <Form.Control
             type="text"
             placeholder="Location"
@@ -60,57 +62,52 @@ const Hotels = () => {
             onChange={(e) => setLocation(e.target.value)}
           />
         </div>
-        <div className="col-md-3">
+        <div className="col-md-2">
           <Form.Control
             type="date"
-            value={checkinDate}
-            onChange={(e) => setCheckinDate(e.target.value)}
+            value={checkInDate}
+            onChange={(e) => setCheckInDate(e.target.value)}
           />
         </div>
         <div className="col-md-2">
+          <Form.Select value={rating} onChange={(e) => setRating(e.target.value)}>
+            <option value="">All Ratings</option>
+            <option value="5">⭐️⭐️⭐️⭐️⭐️</option>
+            <option value="4">⭐️⭐️⭐️⭐️</option>
+            <option value="3">⭐️⭐️⭐️</option>
+          </Form.Select>
+        </div>
+        <div className="col-md-1">
           <Form.Control
             type="number"
-            placeholder="Min Price"
+            placeholder="Min"
             value={minPrice}
             onChange={(e) => setMinPrice(e.target.value)}
           />
         </div>
-        <div className="col-md-2">
+        <div className="col-md-1">
           <Form.Control
             type="number"
-            placeholder="Max Price"
+            placeholder="Max"
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
           />
         </div>
         <div className="col-md-2">
-          <Form.Select value={rating} onChange={(e) => setRating(e.target.value)}>
-            <option value="">Rating</option>
-            <option value="5">5 ⭐</option>
-            <option value="4">4 ⭐ & above</option>
-            <option value="3">3 ⭐ & above</option>
-          </Form.Select>
-        </div>
-        <div className="col-md-3">
-          <Form.Control
-            type="text"
-            placeholder="Amenities (comma-separated)"
-            value={amenities}
-            onChange={(e) => setAmenities(e.target.value)}
-          />
-        </div>
-        <div className="col-md-3">
           <Form.Select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
             <option value="">Sort By</option>
             <option value="price-asc">Price: Low to High</option>
             <option value="price-desc">Price: High to Low</option>
-            <option value="rating-desc">Rating: High to Low</option>
           </Form.Select>
         </div>
         <div className="col-md-2">
-          <Button type="submit" variant="success" className="w-100">Search</Button>
+          <Button type="submit" variant="primary" className="w-100">Search</Button>
         </div>
       </Form>
+
+      {checkInDate && (
+        <p className="text-secondary">Showing hotels for <strong>{checkInDate}</strong></p>
+      )}
 
       {loading ? (
         <div className="text-center"><Spinner animation="border" /></div>
@@ -122,11 +119,12 @@ const Hotels = () => {
             <div className="col-md-4 mb-4" key={hotel._id}>
               <Card className="shadow-sm h-100">
                 <Card.Body>
-                  <h5 className="text-success">{hotel.name}</h5>
+                  <h5 className="text-primary">{hotel.name}</h5>
                   <p><strong>{hotel.location}</strong></p>
-                  <p>⭐ {hotel.rating} | ₹ {hotel.price}</p>
-                  <p>Amenities: {(hotel.amenities || []).join(', ')}</p>
-                  <Button variant="success" onClick={() => handleBookHotel(hotel)}>Book Now</Button>
+                  <p>Rating: {hotel.rating}⭐️</p>
+                  <p>Amenities: {hotel.amenities?.join(', ')}</p>
+                  <p>₹ {hotel.price}</p>
+                  <Button variant="primary" onClick={() => handleBookHotel(hotel)}>Book Now</Button>
                 </Card.Body>
               </Card>
             </div>

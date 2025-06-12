@@ -19,9 +19,11 @@ const Flights = () => {
       setLoading(true);
       const params = { source, destination, departureDate, minPrice, maxPrice, sortBy };
       const { data } = await axios.get('/api/flights/search', { params });
-      setFlights(data);
+      console.log("Fetched flight data:", data); // For debugging
+      setFlights(Array.isArray(data) ? data : data.flights || []);
     } catch (error) {
       console.error('Error fetching flights:', error);
+      setFlights([]);
     } finally {
       setLoading(false);
     }

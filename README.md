@@ -148,6 +148,7 @@ You can deploy using **Render**and **Netlify**
 **Deployed Links:** 
 **Frontend**: https://spectacular-blini-9ce730.netlify.app
 **Backend**: https://make-my-trip-clone-1-5wtu.onrender.com
+*Note*: Firstly run *Backend* and then run *Frontend* 
 
 **User credentials**
 **User Login**: email: yashubaghel2019@gmail.com

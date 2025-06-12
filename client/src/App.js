@@ -5,6 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import PrivateAdminRoute from './components/PrivateAdminRoute';
 
+import Payment from './pages/Payment'; // ✅ FIXED: Corrected import name
+import PaymentSuccess from './pages/PaymentSuccess';
 import Flights from './pages/Flights';
 import Hotels from './pages/Hotels';
 import Login from './pages/Login';
@@ -16,7 +18,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ManageFlights from './pages/ManageFlights';
 import ManageHotels from './pages/ManageHotels';
 
-import Home from './pages/Home';  // Make sure you import Home
+import Home from './pages/Home';  // ✅ Home page component
 
 import './App.css';
 
@@ -25,6 +27,7 @@ function App() {
 
   return (
     <Router>
+      {/* Navbar */}
       <Navbar bg="primary" variant="dark" expand="lg">
         <Container>
           <Navbar.Brand as={Link} to="/">MakeMyTrip Clone</Navbar.Brand>
@@ -37,24 +40,32 @@ function App() {
               <Nav.Link as={Link} to="/register">Register</Nav.Link>
               <Nav.Link as={Link} to="/user-bookings">User Bookings</Nav.Link>
               <Nav.Link as={Link} to="/admin/login">Admin</Nav.Link>
+
+              {/* Only visible to admin if logged in */}
               {isAdminLoggedIn && (
                 <Nav.Link as={Link} to="/admin/dashboard">Admin Dashboard</Nav.Link>
               )}
+
+              {/* ❌ Removed direct Pay link - only navigate via booking */}
+              {/* <Nav.Link as={Link} to="/payment">Pay</Nav.Link> */}
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
 
+      {/* Routes */}
       <Container className="my-4">
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<Home />} /> 
+          <Route path="/" element={<Home />} />
           <Route path="/flights" element={<Flights />} />
           <Route path="/hotels" element={<Hotels />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/user-bookings" element={<UserBookings />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/payment" element={<Payment />} /> {/* ✅ Fixed */}
+          <Route path="/payment-success" element={<PaymentSuccess />} />
 
           {/* Protected Admin Routes */}
           <Route

@@ -12,7 +12,7 @@ mongoose.connect(process.env.MONGO_URI).then(async () => {
       rating: 5,
       price: 7500,
       amenities: ['wifi', 'pool', 'spa'],
-      checkinDate: '2025-05-16',
+      checkinDate: '2025-06-30',
     },
     {
       name: 'Budget Inn',
@@ -20,7 +20,7 @@ mongoose.connect(process.env.MONGO_URI).then(async () => {
       rating: 3,
       price: 2500,
       amenities: ['wifi', 'parking'],
-      checkinDate: '2025-05-16',
+      checkinDate: '2025-06-30',
     },
     {
       name: 'Sea View Resort',
@@ -28,7 +28,7 @@ mongoose.connect(process.env.MONGO_URI).then(async () => {
       rating: 4,
       price: 5200,
       amenities: ['wifi', 'pool', 'spa'],
-      checkinDate: '2025-05-16',
+      checkinDate: '2025-06-30',
     }
   ]);
 

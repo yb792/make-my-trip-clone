@@ -32,7 +32,7 @@ async function seedData() {
         to: 'Mumbai',
         fromCode: airportCodes['Delhi'],
         toCode: airportCodes['Mumbai'],
-        departureDate: new Date('2025-05-16T10:00:00'),  //
+        departureDate: new Date('2025-06-30T10:00:00'),
         departureTime: '10:00',
         arrivalTime: '12:15',
         price: 5000
@@ -43,7 +43,7 @@ async function seedData() {
         to: 'Mumbai',
         fromCode: airportCodes['Delhi'],
         toCode: airportCodes['Mumbai'],
-        departureDate: new Date('2025-05-16T12:30:00'),  //
+        departureDate: new Date('2025-06-30T12:30:00'),
         departureTime: '12:30',
         arrivalTime: '14:40',
         price: 4200
@@ -54,14 +54,13 @@ async function seedData() {
         to: 'Mumbai',
         fromCode: airportCodes['Delhi'],
         toCode: airportCodes['Mumbai'],
-        departureDate: new Date('2025-05-16T15:45:00'),  
+        departureDate: new Date('2025-06-30T15:45:00'),
         departureTime: '15:45',
         arrivalTime: '17:30',
         price: 4800
       }
     ];
     
-    // Insert the sample flight data into MongoDB
     await Flight.insertMany(sampleFlights);
     console.log('✅ Sample flight data inserted with airport codes');
     process.exit();  // Exit after seeding

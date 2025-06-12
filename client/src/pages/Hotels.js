@@ -1,122 +1,138 @@
-// src/pages/Hotels.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Card, Form, Button, Spinner } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const Hotels = () => {
+  const [hotels, setHotels] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [location, setLocation] = useState('');
   const [checkinDate, setCheckinDate] = useState('');
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(10000);
   const [rating, setRating] = useState('');
   const [amenities, setAmenities] = useState('');
   const [sortBy, setSortBy] = useState('');
-  const [hotels, setHotels] = useState([]);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
-  const API_BASE = process.env.REACT_APP_API_BASE_URL;
-
-  const handleSearch = async () => {
+  const fetchHotels = async () => {
     try {
-      const { data } = await axios.get(`${API_BASE}/api/hotels/search`, {
-        params: { location, checkinDate, minPrice, maxPrice, rating, amenities, sortBy },
-      });
+      setLoading(true);
+      const params = { location, checkinDate, minPrice, maxPrice, rating, amenities, sortBy };
+      const { data } = await axios.get('/api/hotels/search', { params });
       setHotels(data);
-      setError('');
-      setSuccess('');
     } catch (err) {
-      setHotels([]);
-      setError('No hotels found for selected filters.');
+      console.error('❌ Error fetching hotels:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleBook = async (hotel) => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setError('You must be logged in to book a hotel.');
-      setSuccess('');
-      return;
-    }
+  useEffect(() => {
+    fetchHotels();
+  }, []);
 
-    try {
-      await axios.post(`${API_BASE}/api/bookings/hotel`, {
-        hotel: hotel._id,
-        totalPrice: hotel.price,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setSuccess('✅ Hotel booked successfully!');
-      setError('');
-    } catch (err) {
-      setError('❌ Hotel booking failed.');
-      setSuccess('');
-    }
+  const handleFilterSubmit = (e) => {
+    e.preventDefault();
+    fetchHotels();
+  };
+
+  const handleBookHotel = (hotel) => {
+    const bookingDetails = {
+      type: 'hotel',
+      hotel: hotel._id,
+      totalPrice: hotel.price,
+      price: hotel.price,
+    };
+    navigate('/payment', { state: { bookingDetails } });
   };
 
   return (
-    <div className="container my-5">
-      <h2 className="text-center fw-bold mb-4">🏨 Find the Perfect Stay</h2>
+    <div className="container my-4">
+      <h2 className="text-success mb-4">🏨 Search Hotels</h2>
 
-      <div className="row g-3 mb-4">
+      <Form onSubmit={handleFilterSubmit} className="row g-3 mb-4">
         <div className="col-md-3">
-          <input type="text" className="form-control" placeholder="📍 Location" value={location} onChange={(e) => setLocation(e.target.value)} />
+          <Form.Control
+            type="text"
+            placeholder="Location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
         </div>
         <div className="col-md-3">
-          <input type="date" className="form-control" value={checkinDate} onChange={(e) => setCheckinDate(e.target.value)} />
+          <Form.Control
+            type="date"
+            value={checkinDate}
+            onChange={(e) => setCheckinDate(e.target.value)}
+          />
         </div>
         <div className="col-md-2">
-          <input type="number" className="form-control" placeholder="Min ₹" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} />
+          <Form.Control
+            type="number"
+            placeholder="Min Price"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+          />
         </div>
         <div className="col-md-2">
-          <input type="number" className="form-control" placeholder="Max ₹" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
+          <Form.Control
+            type="number"
+            placeholder="Max Price"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+          />
         </div>
         <div className="col-md-2">
-          <select className="form-select" value={rating} onChange={(e) => setRating(e.target.value)}>
-            <option value="">Min Rating</option>
-            {[1, 2, 3, 4, 5].map(r => <option key={r} value={r}>{r} ⭐</option>)}
-          </select>
+          <Form.Select value={rating} onChange={(e) => setRating(e.target.value)}>
+            <option value="">Rating</option>
+            <option value="5">5 ⭐</option>
+            <option value="4">4 ⭐ & above</option>
+            <option value="3">3 ⭐ & above</option>
+          </Form.Select>
         </div>
-        <div className="col-md-4">
-          <input type="text" className="form-control" placeholder="🛁 Amenities (comma separated)" value={amenities} onChange={(e) => setAmenities(e.target.value)} />
+        <div className="col-md-3">
+          <Form.Control
+            type="text"
+            placeholder="Amenities (comma-separated)"
+            value={amenities}
+            onChange={(e) => setAmenities(e.target.value)}
+          />
         </div>
-        <div className="col-md-2">
-          <select className="form-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+        <div className="col-md-3">
+          <Form.Select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
             <option value="">Sort By</option>
-            <option value="priceAsc">💰 Price: Low to High</option>
-            <option value="priceDesc">💸 Price: High to Low</option>
-            <option value="rating">🌟 Top Rated</option>
-          </select>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating-desc">Rating: High to Low</option>
+          </Form.Select>
         </div>
         <div className="col-md-2">
-          <button className="btn btn-primary w-100 fw-semibold" onClick={handleSearch}>🔍 Search</button>
+          <Button type="submit" variant="success" className="w-100">Search</Button>
         </div>
-      </div>
+      </Form>
 
-      {error && <div className="alert alert-danger text-center">{error}</div>}
-      {success && <div className="alert alert-success text-center">{success}</div>}
-
-      <div className="row">
-        {hotels.length === 0 && !error && (
-          <p className="text-center text-muted">No hotels to display yet. Try a search! 🏨</p>
-        )}
-
-        {hotels.map((hotel) => (
-          <div key={hotel._id} className="col-md-4 mb-4">
-            <div className="card h-100 border-0 shadow-sm rounded-4">
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title text-primary fw-bold">{hotel.name}</h5>
-                <p><strong>📍 Location:</strong> {hotel.location}</p>
-                <p><strong>⭐ Rating:</strong> {hotel.rating}</p>
-                <p><strong>💰 Price:</strong> ₹{hotel.price} / night</p>
-                <p><strong>🛎 Amenities:</strong> {hotel.amenities.join(', ')}</p>
-                <button className="btn btn-success mt-auto" onClick={() => handleBook(hotel)}>🛏 Book Now</button>
-              </div>
+      {loading ? (
+        <div className="text-center"><Spinner animation="border" /></div>
+      ) : hotels.length === 0 ? (
+        <p>No hotels found for the selected criteria.</p>
+      ) : (
+        <div className="row">
+          {hotels.map((hotel) => (
+            <div className="col-md-4 mb-4" key={hotel._id}>
+              <Card className="shadow-sm h-100">
+                <Card.Body>
+                  <h5 className="text-success">{hotel.name}</h5>
+                  <p><strong>{hotel.location}</strong></p>
+                  <p>⭐ {hotel.rating} | ₹ {hotel.price}</p>
+                  <p>Amenities: {(hotel.amenities || []).join(', ')}</p>
+                  <Button variant="success" onClick={() => handleBookHotel(hotel)}>Book Now</Button>
+                </Card.Body>
+              </Card>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

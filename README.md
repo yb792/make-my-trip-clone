@@ -154,10 +154,29 @@ You can deploy using **Render**and **Netlify**
 **User credentials**
 **User Login**: email: yashubaghel2019@gmail.com
                 password: Yashu@123
-                Search flights from Delhi to Mumbai for 16/05/2025
-                Seach hotels in Delhi, Mumbai and Goa for 16/05/2025
+                Search flights from Delhi to Mumbai for 30/06/2025
+                Seach hotels in Delhi, Mumbai and Goa for 30/06/2025
 **Admin Login**: email: yashu09@gmail.com
                  password: Yashu@09
+
+ ## 🧪 Testing
+
+This project includes automated test cases for:
+
+- 🔐 User Authentication
+- ✈️ Flight Search
+- 🏨 Hotel Search
+
+### 📦 Run Tests Locally
+
+MongoDB is running locally or set `MONGO_URI` in `.env`.
+
+Then run:
+
+```bash
+cd server
+npm test
+
 
 ## 📘 Usage Instructions
 

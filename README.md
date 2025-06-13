@@ -1,3 +1,6 @@
+![Backend CI](https://github.com/yb792/make-my-trip-clone/actions/workflows/server-ci.yml/badge.svg)
+
+
 # Make_My_Trip_Clone_Website
 # ✈️ MakeMyTrip Clone – MERN Stack Travel Booking Portal
 

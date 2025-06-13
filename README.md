@@ -42,6 +42,7 @@ server/              # Express backend
 │
 ├── models/                # Mongoose models (User, Flight, Hotel, Booking)
 ├── routes/                # All route files (auth, flights, hotels, admin)
+├── tests                  # auth, flight, and hotel search test cases
 ├── middleware/            # Auth middlewares           
 └── server.js              # App entry point
 └── .env                   # environment variables containing Mongo_URI, JWT_Secret_Key and PORT

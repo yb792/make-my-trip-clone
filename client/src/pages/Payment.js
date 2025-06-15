@@ -1,7 +1,6 @@
-// src/pages/Payment.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import { PayPalButtons } from '@paypal/react-paypal-js';
 import axios from 'axios';
 import { Container, Card, Spinner, Alert } from 'react-bootstrap';
 
@@ -15,9 +14,6 @@ function Payment() {
   const [loading, setLoading] = useState(true);
   const [conversionError, setConversionError] = useState(false);
 
-  const PAYPAL_CLIENT_ID = process.env.REACT_APP_PAYPAL_CLIENT_ID;
-
-  // Convert INR to USD
   useEffect(() => {
     const convertINRtoUSD = async () => {
       try {
@@ -49,10 +45,10 @@ function Payment() {
   }
 
   const handleApprove = async (data, actions) => {
-    const details = await actions.order.capture();
-    console.log('✅ Payment Successful:', details);
-
     try {
+      const details = await actions.order.capture();
+      console.log('✅ Payment Successful:', details);
+
       const response = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/api/bookings/${bookingType}`,
         bookingDetails,
@@ -62,11 +58,20 @@ function Payment() {
           },
         }
       );
+
       console.log('✅ Booking saved:', response.data);
-      navigate('/payment-success');
+      navigate('/payment-success', {
+        state: {
+          details,
+          bookingDetails: {
+            ...bookingDetails,
+            type: bookingType,
+          },
+        },
+      });
     } catch (error) {
-      console.error('❌ Booking API error:', error);
-      alert('Booking failed after payment.');
+      console.error('❌ Error during booking or payment:', error);
+      alert('Booking failed. Please try again.');
     }
   };
 
@@ -78,31 +83,31 @@ function Payment() {
         {loading ? (
           <Spinner animation="border" />
         ) : (
-          <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID, currency: 'USD' }}>
-            <>
-              <p><strong>Converted to USD:</strong> ${usdAmount}</p>
-              {conversionError && (
-                <Alert variant="warning">⚠️ Using fallback rate 1 USD ≈ ₹83.</Alert>
-              )}
-              <PayPalButtons
-                style={{ layout: 'vertical' }}
-                createOrder={(data, actions) => {
-                  return actions.order.create({
-                    purchase_units: [{
+          <>
+            <p><strong>Converted to USD:</strong> ${usdAmount}</p>
+            {conversionError && (
+              <Alert variant="warning">⚠️ Using fallback conversion: 1 USD = ₹83</Alert>
+            )}
+            <PayPalButtons
+              style={{ layout: 'vertical' }}
+              createOrder={(data, actions) => {
+                return actions.order.create({
+                  purchase_units: [
+                    {
                       amount: {
-                        value: usdAmount,
+                        value: usdAmount?.toString(),
                       },
-                    }],
-                  });
-                }}
-                onApprove={handleApprove}
-                onError={(err) => {
-                  console.error('❌ PayPal Error:', err);
-                  alert('Payment failed. Please try again.');
-                }}
-              />
-            </>
-          </PayPalScriptProvider>
+                    },
+                  ],
+                });
+              }}
+              onApprove={handleApprove}
+              onError={(err) => {
+                console.error('❌ PayPal Error:', err);
+                alert('Payment failed. Please try again.');
+              }}
+            />
+          </>
         )}
       </Card>
     </Container>

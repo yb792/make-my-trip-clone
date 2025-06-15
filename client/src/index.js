@@ -4,13 +4,12 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
-// ✅ Replace with your actual Sandbox Client ID (yours is correct)
-const PAYPAL_CLIENT_ID = 'Ae-f-o8_p3Ozwq9QdvzPM0FZRilDb9nhzz9sJX-M9jFHQMEDeO1uj3939sx6luaxNhfjjV3FgNaMenUr';
+const PAYPAL_CLIENT_ID = process.env.REACT_APP_PAYPAL_CLIENT_ID;
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <PayPalScriptProvider options={{ "client-id": PAYPAL_CLIENT_ID, currency: "INR" }}>
+    <PayPalScriptProvider options={{ "client-id": PAYPAL_CLIENT_ID, currency: "USD" }}>
       <App />
     </PayPalScriptProvider>
   </React.StrictMode>

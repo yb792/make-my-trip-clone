@@ -155,6 +155,11 @@ You can deploy using **Render**and **Netlify**
 **Backend**: https://make-my-trip-clone-1-5wtu.onrender.com
 *Note*: Firstly run *Backend* and then run *Frontend* 
 
+### Payment Integration 
+Paypal Sandbox Test account credentials - Business account - login email - sb-jh6ai43420018@business.example.com
+                                                             pass - dSdjZo>1 
+                                          Personal account - login email - sb-pv2b043393752@personal.example.com
+                                                             pass - test@1234
 **User credentials**
 **User Login**: email: yashubaghel2019@gmail.com
                 password: Yashu@123
@@ -162,6 +167,12 @@ You can deploy using **Render**and **Netlify**
                 Seach hotels in Delhi, Mumbai and Goa for 30/06/2025
 **Admin Login**: email: yashu09@gmail.com
                  password: Yashu@09
+
+ ### Payment Integration 
+Paypal Sandbox Test account credentials - Business account - login email - sb-jh6ai43420018@business.example.com
+                                                             pass - dSdjZo>1 
+                                          Personal account - login email - sb-pv2b043393752@personal.example.com
+                                                             pass - test@1234
 
  ## 🧪 Testing
 

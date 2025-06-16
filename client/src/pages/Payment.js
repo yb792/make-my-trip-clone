@@ -49,6 +49,7 @@ function Payment() {
       const details = await actions.order.capture();
       console.log('✅ Payment Successful:', details);
 
+      // Save booking to DB
       const response = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/api/bookings/${bookingType}`,
         bookingDetails,
@@ -80,6 +81,7 @@ function Payment() {
       <Card className="shadow p-5 text-center" style={{ minWidth: '350px' }}>
         <h3 className="mb-4">Pay with PayPal</h3>
         <p><strong>Amount (INR):</strong> ₹{bookingDetails.totalPrice}</p>
+
         {loading ? (
           <Spinner animation="border" />
         ) : (
@@ -88,6 +90,7 @@ function Payment() {
             {conversionError && (
               <Alert variant="warning">⚠️ Using fallback conversion: 1 USD = ₹83</Alert>
             )}
+
             <PayPalButtons
               style={{ layout: 'vertical' }}
               createOrder={(data, actions) => {
@@ -96,6 +99,7 @@ function Payment() {
                     {
                       amount: {
                         value: usdAmount?.toString(),
+                        currency_code: 'USD', // ✅ REQUIRED for PayPal to work
                       },
                     },
                   ],

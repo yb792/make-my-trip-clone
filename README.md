@@ -33,7 +33,7 @@ client/ # React frontend
 └── build 
 │
 └── src/
-    ├── pages/                 #  AdminDashboard, AdminLogin, Home, Flights, Hotels, Login, ManageFlights, ManageHotels, Register
+    ├── pages/                 # AdminDashboard, AdminLogin, Home, Flights, Hotels, Login, ManageFlights, ManageHotels, Register
     ├── components/            # BookingButton.js, FlightCard.js, FlightSearchResults.js, HotelCard.js, Navbar.js, PrivateAdminRoutes.js
     └── App.js                 # Routing and layout
     └── index.js               # Scripting file

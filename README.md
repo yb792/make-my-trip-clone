@@ -16,6 +16,7 @@ A full-stack travel booking web app inspired by MakeMyTrip, built using **MongoD
 - Apply filters (e.g., price, date, location, rating, amenities)
 - Book flights and hotels
 - View booking history
+- Payment integration using Paypal
 
 ### 🛠️ Admin Side
 - Secure Admin Login (with role-based access)

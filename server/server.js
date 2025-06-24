@@ -8,7 +8,7 @@ const app = express();
 
 const allowedOrigins = [
   'https://spectacular-blini-9ce730.netlify.app',
-  'http://localhost:3000',
+  'http://localhost:3000', 'http://localhost:3001'
 ];
 
 app.use(cors({

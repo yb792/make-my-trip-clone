@@ -50,17 +50,24 @@ function Payment() {
       console.log('✅ Payment Successful:', details);
 
       // Save booking to DB
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Session expired. Please login again.');
+        return navigate('/login');
+      }
+
       const response = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/api/bookings/${bookingType}`,
         bookingDetails,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
       console.log('✅ Booking saved:', response.data);
+
       navigate('/payment-success', {
         state: {
           details,
@@ -72,7 +79,15 @@ function Payment() {
       });
     } catch (error) {
       console.error('❌ Error during booking or payment:', error);
-      alert('Booking failed. Please try again.');
+      if (error.response) {
+        console.log('⚠️ Server responded with:', error.response.data);
+        alert(`Booking failed: ${error.response.data.message}`);
+      } else if (error.request) {
+        console.log('⚠️ No response received:', error.request);
+        alert('Booking failed. No response from server.');
+      } else {
+        alert('Booking failed. Unknown error occurred.');
+      }
     }
   };
 
@@ -99,7 +114,7 @@ function Payment() {
                     {
                       amount: {
                         value: usdAmount?.toString(),
-                        currency_code: 'USD', // ✅ REQUIRED for PayPal to work
+                        currency_code: 'USD',
                       },
                     },
                   ],

@@ -1,4 +1,4 @@
-// src/pages/UserBookings.js
+// ✅ Updated UserBookings.js for full flight + hotel cancel support
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -18,7 +18,7 @@ const cityMap = {
 const UserBookings = () => {
   const [bookings, setBookings] = useState([]);
   const token = localStorage.getItem('token');
-  const API_BASE = process.env.REACT_APP_API_BASE_URL; // Reference to the environment variable
+  const API_BASE = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -33,7 +33,7 @@ const UserBookings = () => {
     };
 
     fetchBookings();
-  }, [API_BASE, token]); // Ensure the effect reruns if `apiBaseUrl` or `token` changes
+  }, [API_BASE, token]);
 
   const cancelBooking = async (id) => {
     if (!window.confirm('Are you sure you want to cancel this booking?')) return;
@@ -42,7 +42,7 @@ const UserBookings = () => {
       await axios.delete(`${API_BASE}/api/bookings/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setBookings(bookings.filter((b) => b._id !== id));
+      setBookings((prev) => prev.filter((b) => b._id !== id));
     } catch (err) {
       console.error('Error cancelling booking:', err);
     }

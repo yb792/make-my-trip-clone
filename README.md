@@ -33,7 +33,7 @@ client/ # React frontend
 └── build 
 │
 └── src/
-    ├── pages/                 # AdminDashboard, AdminLogin, Home, Flights, Hotels, Login, ManageFlights, ManageHotels, Register
+    ├── pages/                 # AdminDashboard, AdminLogin, Home, Flights, Hotels, Login, ManageFlights, ManageHotels, Register, Payment, PaymentSuccess
     ├── components/            # BookingButton.js, FlightCard.js, FlightSearchResults.js, HotelCard.js, Navbar.js, PrivateAdminRoutes.js
     └── App.js                 # Routing and layout
     └── index.js               # Scripting file
@@ -166,10 +166,13 @@ You can deploy using **Render**and **Netlify**
 
 
  ### Payment Integration 
-Paypal Sandbox Test account credentials - Business account - login email - sb-jh6ai43420018@business.example.com
-                                                             pass - dSdjZo>1 
-                                          Personal account - login email - sb-pv2b043393752@personal.example.com
-                                                             pass - test@1234
+
+ Login in using Paypal Sandbox Personal(Buyer) Test Account
+
+Paypal Sandbox Test account credentials -Personal account - login email - sb-edriy44082157@personal.example.com
+                                                            pass - ZGmOl_f0
+                                         Business account -  login email - sb-hv6ms36840023@business.example.com
+                                                            pass - 8H.|rjgt
 
  ## 🧪 Testing
 
